@@ -514,11 +514,56 @@
                         <outlet property="movieTitle" destination="xch-37-5BA" id="xgn-BX-gKq"/>
                         <outlet property="movieYear" destination="Vwn-qU-9BY" id="Ema-uO-oTM"/>
                         <outlet property="scrollView" destination="96F-YU-Uba" id="q5l-Wi-1Ns"/>
+                        <segue destination="r6r-ub-ySb" kind="show" identifier="gotoMoviePlayer" id="iZC-M0-wg4"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="98y-yO-6pt" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="2257.971014492754" y="138.61607142857142"/>
+        </scene>
+        <!--Movie Player View Controller-->
+        <scene sceneID="ATf-Mk-TgP">
+            <objects>
+                <viewController id="r6r-ub-ySb" customClass="MoviePlayerViewController" customModule="FMovie" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="lwa-Cy-lJl">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="h2B-iy-L0P">
+                                <rect key="frame" x="157" y="372" width="100" height="98.666666666666686"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="100" id="ayN-zK-T08"/>
+                                    <constraint firstAttribute="height" constant="100" id="rmO-O9-ZKl"/>
+                                </constraints>
+                                <color key="tintColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <state key="normal" backgroundImage="play.circle" catalog="system">
+                                    <color key="titleColor" cocoaTouchSystemColor="darkTextColor"/>
+                                </state>
+                                <connections>
+                                    <action selector="playButton:" destination="r6r-ub-ySb" eventType="touchUpInside" id="yMu-pb-r5b"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="h2B-iy-L0P" firstAttribute="centerY" secondItem="lwa-Cy-lJl" secondAttribute="centerY" id="4Ax-6L-hoY"/>
+                            <constraint firstItem="h2B-iy-L0P" firstAttribute="centerX" secondItem="lwa-Cy-lJl" secondAttribute="centerX" id="qsw-1h-3ax"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="DSy-ln-Q05"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="FEu-fv-Nth"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JYR-Zl-3lq" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3600" y="139"/>
+        </scene>
+        <!--Play Video-->
+        <scene sceneID="FSf-RJ-jlb">
+            <objects>
+                <avPlayerViewController title="Play Video" videoGravity="AVLayerVideoGravityResizeAspect" id="UxQ-mf-Fnr" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="tMG-5O-4ah" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="4590" y="231"/>
         </scene>
     </scenes>
     <resources>

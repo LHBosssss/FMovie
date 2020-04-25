@@ -26,6 +26,8 @@
 		EF98BBCA244C4AF10087CBBF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF98BBC8244C4AF10087CBBF /* Main.storyboard */; };
 		EF98BBCC244C4AF30087CBBF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF98BBCB244C4AF30087CBBF /* Assets.xcassets */; };
 		EF98BBCF244C4AF30087CBBF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF98BBCD244C4AF30087CBBF /* LaunchScreen.storyboard */; };
+		EF9E7445245424CC00C4C8B9 /* MoviePlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF9E7444245424CC00C4C8B9 /* MoviePlayerViewController.swift */; };
+		EFE3B5F12453BDFE00E94BB9 /* FshareLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE3B5F02453BDFE00E94BB9 /* FshareLinkManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +54,23 @@
 		EF98BBCB244C4AF30087CBBF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF98BBCE244C4AF30087CBBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EF98BBD0244C4AF30087CBBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EF9E7444245424CC00C4C8B9 /* MoviePlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviePlayerViewController.swift; sourceTree = "<group>"; };
+		EFB698B62454529500741900 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		EFB698B72454529500741900 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		EFB698B82454529500741900 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		EFB698B92454529500741900 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		EFB698BA2454529500741900 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		EFB698BB2454529500741900 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		EFB698BC2454529500741900 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		EFB698BD2454529500741900 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		EFB698BE2454529500741900 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
+		EFB698BF2454529600741900 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		EFB698C02454529600741900 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
+		EFB698C12454529600741900 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		EFB698C22454529600741900 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EFB698D02454537800741900 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
+		EFB698D12454537800741900 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		EFE3B5F02453BDFE00E94BB9 /* FshareLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FshareLinkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,6 +97,21 @@
 		C6722B2E65C6285378C7C12C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EFB698D02454537800741900 /* CoreText.framework */,
+				EFB698D12454537800741900 /* CoreVideo.framework */,
+				EFB698BD2454529500741900 /* AudioToolbox.framework */,
+				EFB698C02454529600741900 /* AVFoundation.framework */,
+				EFB698BB2454529500741900 /* CFNetwork.framework */,
+				EFB698B82454529500741900 /* CoreFoundation.framework */,
+				EFB698B62454529500741900 /* CoreGraphics.framework */,
+				EFB698BE2454529500741900 /* CoreMedia.framework */,
+				EFB698C22454529600741900 /* Foundation.framework */,
+				EFB698BC2454529500741900 /* libbz2.tbd */,
+				EFB698B92454529500741900 /* libiconv.tbd */,
+				EFB698C12454529600741900 /* OpenGLES.framework */,
+				EFB698BA2454529500741900 /* QuartzCore.framework */,
+				EFB698BF2454529600741900 /* Security.framework */,
+				EFB698B72454529500741900 /* VideoToolbox.framework */,
 				5437C45BDE5AC0784BDB7BF2 /* Pods_FMovie.framework */,
 			);
 			name = Frameworks;
@@ -91,6 +125,7 @@
 				EF656593244F00E5000FBF9D /* CategoryManager.swift */,
 				EF656597244F49CA000FBF9D /* MoviesManager.swift */,
 				EF61E8CD2451823D0013C95F /* MovieInformationManager.swift */,
+				EFE3B5F02453BDFE00E94BB9 /* FshareLinkManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -135,6 +170,7 @@
 				EF98BBC6244C4AF10087CBBF /* LoginViewController.swift */,
 				EF3BC42F244DD192000B85C6 /* MoviesListViewController.swift */,
 				EF0EB0342451389C0018B784 /* MovieDetailViewController.swift */,
+				EF9E7444245424CC00C4C8B9 /* MoviePlayerViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -268,10 +304,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				EF656592244EEB28000FBF9D /* SubMenuCollectionViewCell.swift in Sources */,
+				EFE3B5F12453BDFE00E94BB9 /* FshareLinkManager.swift in Sources */,
 				EF98BBC7244C4AF10087CBBF /* LoginViewController.swift in Sources */,
 				EF656594244F00E5000FBF9D /* CategoryManager.swift in Sources */,
 				EF3BC42E244DC9D0000B85C6 /* FshareManager.swift in Sources */,
 				EF0EB0352451389C0018B784 /* MovieDetailViewController.swift in Sources */,
+				EF9E7445245424CC00C4C8B9 /* MoviePlayerViewController.swift in Sources */,
 				EF98BBC3244C4AF10087CBBF /* AppDelegate.swift in Sources */,
 				EF1B9F5424533CF9006E2390 /* LinkViewCell.swift in Sources */,
 				EF3BC42C244DC826000B85C6 /* FshareAccount.swift in Sources */,
@@ -436,7 +474,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hoduyluong.FMovie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -456,7 +494,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.hoduyluong.FMovie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};

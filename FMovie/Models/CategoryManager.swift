@@ -37,7 +37,7 @@ class CategoryManager {
         ],
         [
             "title" : "Tìm Kiếm",
-            "genre" : "",
+            "genre" : "phim",
         ]
     ]
     

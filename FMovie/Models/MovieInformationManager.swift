@@ -28,7 +28,6 @@ protocol MovieInformationManagerDelegate {
 class MovieInformationManager {
     
     var delegate: MovieInformationManagerDelegate?
-    
     // MARK: - Get Movie Extra Information
     
     func getMovieExtraInformation(url: String) {
@@ -60,10 +59,8 @@ class MovieInformationManager {
                 let listActorRow = try listActor.select("li")
                 print(listActorRow.count)
                 for actor in listActorRow {
-                    print(actor)
                     let act = try actor.text()
                     actors += act
-                    print("Actorsssss: \(actors)")
                     if actor != listActorRow.last() {
                         actors += ", "
                     } else {

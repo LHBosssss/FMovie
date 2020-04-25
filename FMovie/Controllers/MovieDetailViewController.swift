@@ -7,8 +7,10 @@
 //
 
 import UIKit
+import AVKit
 import SwiftyJSON
 import SDWebImage
+import RealmSwift
 
 class MovieDetailViewController: UIViewController {
     
@@ -24,18 +26,27 @@ class MovieDetailViewController: UIViewController {
     
     var movieInformationManager = MovieInformationManager()
     var movieItem = JSON()
-    var fshareManager: FshareManager?
     var listTitleAndLink = JSON()
+    let fshareLinkManager = FshareLinkManager()
+    var session = ""
+    var token = ""
+    var linkToPlay = ""
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         movieInformationManager.delegate = self
+        fshareLinkManager.delegate = self
+        
+        listLink.removeExtraCellLines()
+        
         scrollView.layer.cornerRadius = 30.0
         self.movieImage.layer.cornerRadius = 30.0
         updateUI()
         self.listLink.layer.cornerRadius = 30.0
         self.listLink.isHidden = true
         self.listLink.dataSource = self
+        self.listLink.delegate = self
         // Do any additional setup after loading the view.
     }
     
@@ -43,13 +54,13 @@ class MovieDetailViewController: UIViewController {
         let title = self.movieItem["title"].stringValue
         let link = self.movieItem["link"].stringValue
         let id = self.movieItem["id"].stringValue
-        self.movieTitle.text = title
+        self.movieTitle.text = String(title.split(separator: "&").first ?? "")
         
         print(self.movieItem["image"].stringValue)
         self.movieImage.sd_setImage(with: URL(string: self.movieItem["image"].stringValue), completed: nil)
         
         if link != "" {
-            DispatchQueue.main.async {
+            DispatchQueue.global().async {
                 self.movieInformationManager.getMovieDescriptionInformation(id: id)
                 print("get description \(Thread.current)")
             }
@@ -70,7 +81,12 @@ class MovieDetailViewController: UIViewController {
         print("Play!!!")
         self.listLink.isHidden = !self.listLink.isHidden
         print("ID = \(self.movieItem["id"])")
-        self.movieInformationManager.getMovieLink(id: self.movieItem["id"].stringValue)
+        if !self.listLink.isHidden {
+            DispatchQueue.global().async {
+                self.movieInformationManager.getMovieLink(id: self.movieItem["id"].stringValue)
+            }
+            
+        }
     }
     
     
@@ -86,7 +102,10 @@ extension MovieDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print(listTitleAndLink[indexPath.row])
         let cell = tableView.dequeueReusableCell(withIdentifier: "LinkCell") as! LinkViewCell
-        cell.linkTitle.text = self.listTitleAndLink[indexPath.row]["title"].stringValue
+        var text = self.listTitleAndLink[indexPath.row]["title"].stringValue
+        
+        cell.linkTitle.text = text
+        
         return cell
     }
     
@@ -138,3 +157,71 @@ extension MovieDetailViewController: MovieInformationManagerDelegate {
 }
 
 
+extension MovieDetailViewController: UITableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.listLink.deselectRow(at: indexPath, animated: true)
+        self.linkToPlay = ""
+        
+        let link = listTitleAndLink[indexPath.row]["link"].stringValue
+        print("Selected \(link)")
+        let isFolderLink = link.contains("folder")
+        print("Is folder: \(isFolderLink)")
+        
+        let realm = try! Realm()
+        let accountData = realm.objects(FshareAccount.self)
+        let count = accountData.count
+        if count > 0 {
+            if let session = accountData.first?.sessionID, let token = accountData.first?.token {
+                self.session = session
+                self.token = token
+                if isFolderLink {
+                    fshareLinkManager.getFolderLink(session: session, token: token, link: link)
+                } else {
+                    fshareLinkManager.getDirectLink(session: session, token: token, link: link)
+                }
+            }
+        }
+        
+    }
+}
+
+
+extension MovieDetailViewController: FshareLinkManagerDelegate {
+    
+    func getFolderLinkSuccess(links: [JSON]) {
+        print("Success")
+        print(links)
+        print("Count = \(links.count)")
+        self.listTitleAndLink = JSON(links)
+        self.listLink.reloadData()
+    }
+    
+    func getDirectLinkSuccess(link: String) {
+        print("Fucking UP Direct Link: \(link)")
+        guard let url = URL(string: link) else {return}
+        linkToPlay = link
+        performSegue(withIdentifier: "gotoMoviePlayer", sender: nil)
+        
+    }
+//
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "gotoMoviePlayer" {
+            let viewController = segue.destination as! MoviePlayerViewController
+            viewController.url = linkToPlay
+        }
+    }
+    
+    func getLinkFailed() {
+        let alert = UIAlertController(title: "Tải dữ liệu thất bại", message: "Không thể tải dữ liệu!", preferredStyle: .alert)
+        let action = UIAlertAction(title: "OK", style: .cancel)
+        alert.addAction(action)
+        present(alert, animated: true, completion: nil)
+    }
+    
+}
+
+extension UITableView {
+    func removeExtraCellLines() {
+        tableFooterView = UIView(frame: .zero)
+    }
+}

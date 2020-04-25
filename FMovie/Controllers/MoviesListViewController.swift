@@ -28,7 +28,6 @@ class MoviesListViewController: UIViewController {
     var loadedMore = false
     var isLastItem = false
     var genreToLoad = ""
-    var fshareManager : FshareManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -246,7 +245,6 @@ class MoviesListViewController: UIViewController {
         if segue.identifier == "gotoMovieDetail" {
             let movieDetailView = segue.destination as! MovieDetailViewController
             movieDetailView.movieItem = movieItems[currentCellIndex]
-            movieDetailView.fshareManager = self.fshareManager
         }
         
     }
