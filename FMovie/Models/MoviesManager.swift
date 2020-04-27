@@ -21,10 +21,10 @@ class MoviesManager {
     var delegate: MoviesManagerDelegate?
     // MARK: - Get Home Page Movies
     
-    func getFeedMovies(page: Int) {
+    func getFeedMovies(search: String? = "", page: Int) {
         print("Get feed movies \(Thread.current)")
         var listMovies = JSON()
-        let requestURL = "https://www.thuvienaz.net/?feed=fsharejson&page=\(14*(page-1))"
+        let requestURL = "https://www.thuvienaz.net/?feed=fsharejson&search=\(search ?? "")&page=\(search == "" ? 14*(page-1) : page)"
         print(requestURL)
         AF.request(requestURL).responseJSON { (response) in
             switch response.result {

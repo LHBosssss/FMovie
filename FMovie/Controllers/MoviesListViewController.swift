@@ -17,6 +17,7 @@ class MoviesListViewController: UIViewController {
     @IBOutlet weak var moviesCollection: UICollectionView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var backgroundImage: UIImageView!
+    @IBOutlet weak var searchBar: UITextField!
     let categoryManager = CategoryManager()
     let moviesManager = MoviesManager()
     var mainMenu = CategoryManager().mainMenuArray
@@ -52,6 +53,24 @@ class MoviesListViewController: UIViewController {
         
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        print("viewWillAppear")
+        self.moviesCollection.scrollToItem(at: IndexPath(item: currentCellIndex, section: 0), at: .centeredHorizontally, animated: true)
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        print("viewDidAppear")
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("viewWillDisappear")
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        print("viewDidDisappear")
+    }
+    
+    
     // MARK: - Update Data After View Did Load
     func updataDataForFirstRun() {
         // Add Swipe
@@ -77,12 +96,17 @@ class MoviesListViewController: UIViewController {
         self.activityIndicator.backgroundColor = UIColor.systemGray4
         self.activityIndicator.isHidden = false
         self.activityIndicator.startAnimating()
+        self.searchBar.isHidden = true
+        self.searchBar.clearsOnBeginEditing = true
+        self.searchBar.clearButtonMode = .whileEditing
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { (timer) in
             self.mainMenuCollection.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
             self.collectionView(self.mainMenuCollection, didSelectItemAt: IndexPath(item: 0, section: 0))
         }
     }
+    
+    
     
     // MARK: - Movie Select Animation
     func gotoTop(cell: MoviesCollectionViewCell) {
@@ -121,9 +145,11 @@ class MoviesListViewController: UIViewController {
         UIView.animate(withDuration: 0.3, animations: {
             self.mainMenuCollection.transform = CGAffineTransform(translationX: 0, y: -50)
             self.subMenuCollection.transform = CGAffineTransform(translationX: 0, y: -50)
+            self.searchBar.transform = CGAffineTransform(translationX: 0, y: -50)
             
             self.mainMenuCollection.alpha = 0.0
             self.subMenuCollection.alpha = 0.0
+            self.searchBar.alpha = 0.0
         }) { (completed) in
             
         }
@@ -158,7 +184,7 @@ class MoviesListViewController: UIViewController {
                 }
             }
             
-            print(nextCell.movieTitleLabel.text)
+            print(nextCell.movieTitleLabel.text ?? "")
             if let indexPath = self.moviesCollection.indexPath(for: nextCell) {
                 gotoTop(cell: nextCell)
                 currentCellIndex = indexPath.item
@@ -183,12 +209,17 @@ class MoviesListViewController: UIViewController {
                         self.activityIndicator.startAnimating()
                         if genreToLoad == "feed" {
                             DispatchQueue.global(qos: .background).async {
-                                self.moviesManager.getFeedMovies(page: self.page)
-                                
+                                self.moviesManager.getFeedMovies(search: "", page: self.page)
+                            }
+                        } else if genreToLoad == "search" {
+                            var searchWords = self.searchBar.text?.folding(options: .diacriticInsensitive, locale: .current)
+                            searchWords = searchWords?.replacingOccurrences(of: " ", with: "%20")
+                            self.activityIndicator.startAnimating()
+                            DispatchQueue.global(qos: .background).async {
+                                self.moviesManager.getFeedMovies(search: searchWords, page: self.page)
                             }
                         }
                         else {
-                            
                             DispatchQueue.global(qos: .userInitiated).async {
                                 self.moviesManager.getGenreMovies(genre: self.genreToLoad, page: self.page)
                             }
@@ -217,7 +248,6 @@ class MoviesListViewController: UIViewController {
                 }
             }
             
-            print(nextCell.movieTitleLabel.text)
             if let indexPath = self.moviesCollection.indexPath(for: nextCell) {
                 gotoTop(cell: nextCell)
                 currentCellIndex = indexPath.item
@@ -248,6 +278,17 @@ class MoviesListViewController: UIViewController {
         }
         
     }
+    
+    // MARK: - Search
+    @IBAction func searchProcess(_ sender: UITextField) {
+        var searchWords = self.searchBar.text?.folding(options: .diacriticInsensitive, locale: .current)
+        searchWords = searchWords?.replacingOccurrences(of: " ", with: "%20")
+        self.activityIndicator.startAnimating()
+        DispatchQueue.global(qos: .background).async {
+            self.moviesManager.getFeedMovies(search: searchWords, page: 1)
+        }
+    }
+    
     
     
 }
@@ -308,9 +349,10 @@ extension MoviesListViewController: UICollectionViewDataSource {
             }
             return submenuCell
         }
-        
-        // MARK: - Cell For Movies Collection
-        if collectionView == self.moviesCollection {
+            
+            // MARK: - Cell For Movies Collection
+            //        if collectionView == self.moviesCollection {
+        else {
             let movieCell = collectionView.dequeueReusableCell(withReuseIdentifier: "MovieCell", for: indexPath) as! MoviesCollectionViewCell
             let movieItem = movieItems[indexPath.item]
             // Set Cell Text
@@ -329,7 +371,6 @@ extension MoviesListViewController: UICollectionViewDataSource {
             
             return movieCell
         }
-        return collectionView.dequeueReusableCell(withReuseIdentifier: "SubMenuCell", for: indexPath)
     }
 }
 
@@ -353,7 +394,7 @@ extension MoviesListViewController: UICollectionViewDelegate {
         if collectionView == self.mainMenuCollection {
             print("Selected mainmenu")
             currentCellIndex = 0
-
+            self.searchBar.isHidden = true
             if let cell = mainMenuCollection.cellForItem(at: indexPath) as? MainMenuCollectionViewCell {
                 // Load Movies
                 print(indexPath.item)
@@ -370,8 +411,13 @@ extension MoviesListViewController: UICollectionViewDelegate {
                     }
                     if genre == "feed" {
                         DispatchQueue.global(qos: .userInitiated).async {
-                            self.moviesManager.getFeedMovies(page: self.page)
+                            self.moviesManager.getFeedMovies(search: "", page: self.page)
                         }
+                    } else if genre == "search" {
+                        self.activityIndicator.stopAnimating()
+                        self.searchBar.alpha = 0.9
+                        self.searchBar.transform = CGAffineTransform(translationX: 0, y: 0)
+                        self.searchBar.isHidden = false
                     } else {
                         DispatchQueue.global(qos: .background).async {
                             self.moviesManager.getGenreMovies(genre: genre, page: self.page)
@@ -406,8 +452,9 @@ extension MoviesListViewController: UICollectionViewDelegate {
                     self.moviesManager.getGenreMovies(genre: genre, page: self.page)
                 }
             }
-            
         }
+        
+        
         
         // MARK: - Did Select Movie Cell
         if collectionView == self.moviesCollection {
@@ -415,7 +462,7 @@ extension MoviesListViewController: UICollectionViewDelegate {
             let visibles = self.moviesCollection.visibleCells
             for visible in visibles {
                 let cell = visible as! MoviesCollectionViewCell
-                print("Visible Cells \(cell.movieTitleLabel)")
+                print("Visible Cells \(cell.movieTitleLabel.text ?? "")")
             }
         }
     }
@@ -445,7 +492,7 @@ extension MoviesListViewController: UICollectionViewDelegate {
             //            print("Delegate DEselected movie cell at: \(indexPath.item)")
             let visibles = self.moviesCollection.visibleCells
             for visible in visibles {
-                let cell = visible as! MoviesCollectionViewCell
+                //                let cell = visible as! MoviesCollectionViewCell
                 //                print("Visible Cells \(cell.movieTitleLabel)")
             }
         }
@@ -533,6 +580,7 @@ extension MoviesListViewController: MoviesManagerDelegate {
     
     // MARK: - Get Movie Failed
     func getMoviesFailed() {
+        self.activityIndicator.stopAnimating()
         let alert = UIAlertController(title: "Tải dữ liệu thất bại", message: "Không thể tải dữ liệu! Vui lòng kiểm tra lại mạng.", preferredStyle: .alert)
         let action = UIAlertAction(title: "OK", style: .cancel)
         alert.addAction(action)
@@ -542,5 +590,9 @@ extension MoviesListViewController: MoviesManagerDelegate {
 }
 
 extension MoviesListViewController: UIScrollViewDelegate {
+    
+    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("scrollViewDidEndDecelerating")
+    }
     
 }

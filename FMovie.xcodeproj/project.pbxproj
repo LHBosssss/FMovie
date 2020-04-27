@@ -26,7 +26,9 @@
 		EF98BBCA244C4AF10087CBBF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF98BBC8244C4AF10087CBBF /* Main.storyboard */; };
 		EF98BBCC244C4AF30087CBBF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF98BBCB244C4AF30087CBBF /* Assets.xcassets */; };
 		EF98BBCF244C4AF30087CBBF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF98BBCD244C4AF30087CBBF /* LaunchScreen.storyboard */; };
-		EF9E7445245424CC00C4C8B9 /* MoviePlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF9E7444245424CC00C4C8B9 /* MoviePlayerViewController.swift */; };
+		EFBA0E1C2455723900C67786 /* ToImportMobileVLCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = EFBA0E1B2455723900C67786 /* ToImportMobileVLCKit.m */; };
+		EFBA0E202455AEFA00C67786 /* MoviePlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EFBA0E1F2455AEFA00C67786 /* MoviePlayer.storyboard */; };
+		EFBA0E222455B79B00C67786 /* MoviePlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFBA0E212455B79B00C67786 /* MoviePlayerViewController.swift */; };
 		EFE3B5F12453BDFE00E94BB9 /* FshareLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE3B5F02453BDFE00E94BB9 /* FshareLinkManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -46,6 +48,7 @@
 		EF656593244F00E5000FBF9D /* CategoryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryManager.swift; sourceTree = "<group>"; };
 		EF656595244F48EE000FBF9D /* MoviesCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesCollectionViewCell.swift; sourceTree = "<group>"; };
 		EF656597244F49CA000FBF9D /* MoviesManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviesManager.swift; sourceTree = "<group>"; };
+		EF96BA0E24551C8B00F7A6BC /* MobileVLCKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileVLCKit.framework; path = Pods/MobileVLCKit/MobileVLCKit.framework; sourceTree = "<group>"; };
 		EF98BBBF244C4AF10087CBBF /* FMovie.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FMovie.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EF98BBC2244C4AF10087CBBF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EF98BBC4244C4AF10087CBBF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -54,7 +57,6 @@
 		EF98BBCB244C4AF30087CBBF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF98BBCE244C4AF30087CBBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EF98BBD0244C4AF30087CBBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EF9E7444245424CC00C4C8B9 /* MoviePlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviePlayerViewController.swift; sourceTree = "<group>"; };
 		EFB698B62454529500741900 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		EFB698B72454529500741900 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		EFB698B82454529500741900 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -70,6 +72,10 @@
 		EFB698C22454529600741900 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		EFB698D02454537800741900 /* CoreText.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreText.framework; path = System/Library/Frameworks/CoreText.framework; sourceTree = SDKROOT; };
 		EFB698D12454537800741900 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = System/Library/Frameworks/CoreVideo.framework; sourceTree = SDKROOT; };
+		EFBA0E1A2455723800C67786 /* FMovie-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "FMovie-Bridging-Header.h"; sourceTree = "<group>"; };
+		EFBA0E1B2455723900C67786 /* ToImportMobileVLCKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToImportMobileVLCKit.m; sourceTree = "<group>"; };
+		EFBA0E1F2455AEFA00C67786 /* MoviePlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MoviePlayer.storyboard; sourceTree = "<group>"; };
+		EFBA0E212455B79B00C67786 /* MoviePlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviePlayerViewController.swift; sourceTree = "<group>"; };
 		EFE3B5F02453BDFE00E94BB9 /* FshareLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FshareLinkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -97,6 +103,7 @@
 		C6722B2E65C6285378C7C12C /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EF96BA0E24551C8B00F7A6BC /* MobileVLCKit.framework */,
 				EFB698D02454537800741900 /* CoreText.framework */,
 				EFB698D12454537800741900 /* CoreVideo.framework */,
 				EFB698BD2454529500741900 /* AudioToolbox.framework */,
@@ -133,10 +140,12 @@
 		EF98BBB6244C4AF10087CBBF = {
 			isa = PBXGroup;
 			children = (
+				EFBA0E1B2455723900C67786 /* ToImportMobileVLCKit.m */,
 				EF98BBC1244C4AF10087CBBF /* FMovie */,
 				EF98BBC0244C4AF10087CBBF /* Products */,
 				05035574BA9EB6A740E16074 /* Pods */,
 				C6722B2E65C6285378C7C12C /* Frameworks */,
+				EFBA0E1A2455723800C67786 /* FMovie-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -170,7 +179,7 @@
 				EF98BBC6244C4AF10087CBBF /* LoginViewController.swift */,
 				EF3BC42F244DD192000B85C6 /* MoviesListViewController.swift */,
 				EF0EB0342451389C0018B784 /* MovieDetailViewController.swift */,
-				EF9E7444245424CC00C4C8B9 /* MoviePlayerViewController.swift */,
+				EFBA0E212455B79B00C67786 /* MoviePlayerViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -179,6 +188,7 @@
 			isa = PBXGroup;
 			children = (
 				EF98BBC8244C4AF10087CBBF /* Main.storyboard */,
+				EFBA0E1F2455AEFA00C67786 /* MoviePlayer.storyboard */,
 				EF65658F244EE432000FBF9D /* MainMenuCollectionViewCell.swift */,
 				EF656591244EEB28000FBF9D /* SubMenuCollectionViewCell.swift */,
 				EF656595244F48EE000FBF9D /* MoviesCollectionViewCell.swift */,
@@ -221,6 +231,7 @@
 				TargetAttributes = {
 					EF98BBBE244C4AF10087CBBF = {
 						CreatedOnToolsVersion = 11.4.1;
+						LastSwiftMigration = 1140;
 					};
 				};
 			};
@@ -250,6 +261,7 @@
 				EF98BBCF244C4AF30087CBBF /* LaunchScreen.storyboard in Resources */,
 				EF3F59CE244F554300D5D496 /* loading.gif in Resources */,
 				EF98BBCC244C4AF30087CBBF /* Assets.xcassets in Resources */,
+				EFBA0E202455AEFA00C67786 /* MoviePlayer.storyboard in Resources */,
 				EF98BBCA244C4AF10087CBBF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -309,7 +321,8 @@
 				EF656594244F00E5000FBF9D /* CategoryManager.swift in Sources */,
 				EF3BC42E244DC9D0000B85C6 /* FshareManager.swift in Sources */,
 				EF0EB0352451389C0018B784 /* MovieDetailViewController.swift in Sources */,
-				EF9E7445245424CC00C4C8B9 /* MoviePlayerViewController.swift in Sources */,
+				EFBA0E222455B79B00C67786 /* MoviePlayerViewController.swift in Sources */,
+				EFBA0E1C2455723900C67786 /* ToImportMobileVLCKit.m in Sources */,
 				EF98BBC3244C4AF10087CBBF /* AppDelegate.swift in Sources */,
 				EF1B9F5424533CF9006E2390 /* LinkViewCell.swift in Sources */,
 				EF3BC42C244DC826000B85C6 /* FshareAccount.swift in Sources */,
@@ -463,8 +476,14 @@
 			baseConfigurationReference = C94F6C4462CD667162A6D346 /* Pods-FMovie.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 8J7BU8XVS6;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/MobileVLCKit",
+				);
 				INFOPLIST_FILE = FMovie/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -473,8 +492,10 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hoduyluong.FMovie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "FMovie-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -483,8 +504,15 @@
 			baseConfigurationReference = 67608C590AEA1021E87493C9 /* Pods-FMovie.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 8J7BU8XVS6;
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Pods/MobileVLCKit",
+				);
 				INFOPLIST_FILE = FMovie/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -493,8 +521,9 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.hoduyluong.FMovie;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OBJC_BRIDGING_HEADER = "FMovie-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

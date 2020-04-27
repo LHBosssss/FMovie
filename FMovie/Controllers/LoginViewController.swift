@@ -14,22 +14,30 @@ class LoginViewController: UIViewController {
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var loginButton: UIButton!
+    @IBOutlet weak var loginProcessing: UIActivityIndicatorView!
     
     var fshareManager: FshareManager?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        print(Realm.Configuration.defaultConfiguration.fileURL)
+        print(Realm.Configuration.defaultConfiguration.fileURL as Any)
         fshareManager?.delegate = self
 
         // Style UI after load
         styleUI()
-        
+        self.loginProcessing.stopAnimating()
+        self.loginProcessing.layer.cornerRadius = 10
+        self.loginProcessing.backgroundColor = UIColor.gray
+        self.loginProcessing.alpha = 0.7
         // Add Fshare Delegate
         
         // Load account data from Realm
         loadAccountData()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        loginProcessing.stopAnimating()
     }
     
     
@@ -80,6 +88,7 @@ class LoginViewController: UIViewController {
     
     // MARK:- Login Button Pressed
     @IBAction func loginPressed(_ sender: UIButton) {
+        loginProcessing.startAnimating()
         pressAnimation()
         if let email = emailTextField.text, let pass = passwordTextField.text {
             if email != "" && pass != "" {
@@ -122,7 +131,6 @@ extension LoginViewController: FshareManagerDelegate {
                 } catch {fatalError("Update Account Data Error")}
             }
         }
-        
         performSegue(withIdentifier: "gotoMoviesListView", sender: nil)
     }
     
@@ -144,10 +152,5 @@ extension LoginViewController: FshareManagerDelegate {
         present(alert, animated: true, completion: nil)
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "gotoMoviesListView" {
-            let moviesListView = segue.destination as! MoviesListViewController
-        }
-    }
 }
 

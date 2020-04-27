@@ -23,6 +23,7 @@ class MovieDetailViewController: UIViewController {
     @IBOutlet weak var movieActors: UITextView!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var listLink: UITableView!
+    @IBOutlet weak var loadingLink: UIActivityIndicatorView!
     
     var movieInformationManager = MovieInformationManager()
     var movieItem = JSON()
@@ -31,6 +32,7 @@ class MovieDetailViewController: UIViewController {
     var session = ""
     var token = ""
     var linkToPlay = ""
+    var titleToPlay = ""
     
     
     override func viewDidLoad() {
@@ -39,6 +41,8 @@ class MovieDetailViewController: UIViewController {
         fshareLinkManager.delegate = self
         
         listLink.removeExtraCellLines()
+        self.loadingLink.layer.cornerRadius = 10
+        self.loadingLink.backgroundColor = UIColor.systemGray4
         
         scrollView.layer.cornerRadius = 30.0
         self.movieImage.layer.cornerRadius = 30.0
@@ -49,6 +53,12 @@ class MovieDetailViewController: UIViewController {
         self.listLink.delegate = self
         // Do any additional setup after loading the view.
     }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        print("viewWillDisappear")
+        self.loadingLink.stopAnimating()
+    }
+    
     
     func updateUI() {
         let title = self.movieItem["title"].stringValue
@@ -79,6 +89,7 @@ class MovieDetailViewController: UIViewController {
     
     @IBAction func playButtonPressed(_ sender: UIButton) {
         print("Play!!!")
+        self.loadingLink.startAnimating()
         self.listLink.isHidden = !self.listLink.isHidden
         print("ID = \(self.movieItem["id"])")
         if !self.listLink.isHidden {
@@ -96,13 +107,14 @@ extension MovieDetailViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print(listTitleAndLink.count)
         print("Data Source")
+        self.loadingLink.stopAnimating()
         return listTitleAndLink.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         print(listTitleAndLink[indexPath.row])
         let cell = tableView.dequeueReusableCell(withIdentifier: "LinkCell") as! LinkViewCell
-        var text = self.listTitleAndLink[indexPath.row]["title"].stringValue
+        let text = self.listTitleAndLink[indexPath.row]["title"].stringValue
         
         cell.linkTitle.text = text
         
@@ -115,6 +127,7 @@ extension MovieDetailViewController: UITableViewDataSource {
 extension MovieDetailViewController: MovieInformationManagerDelegate {
     func getMovieLinkSuccess(links: JSON) {
         print("Success")
+        loadingLink.stopAnimating()
         print(links)
         print("Count = \(links.count)")
         self.listTitleAndLink = links
@@ -146,6 +159,7 @@ extension MovieDetailViewController: MovieInformationManagerDelegate {
     
     
     func getMovieDescriptionInformationSuccess(description: JSON) {
+        self.loadingLink.stopAnimating()
         print("Description Information: \(description)")
         self.movieDesciption.text = description["descriptionInfo"].stringValue
         self.movieTitle.text = description["title"].stringValue.replacingOccurrences(of: "&&", with: "\n")
@@ -161,7 +175,8 @@ extension MovieDetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.listLink.deselectRow(at: indexPath, animated: true)
         self.linkToPlay = ""
-        
+        self.titleToPlay = listTitleAndLink[indexPath.row]["title"].stringValue
+        self.loadingLink.startAnimating()
         let link = listTitleAndLink[indexPath.row]["link"].stringValue
         print("Selected \(link)")
         let isFolderLink = link.contains("folder")
@@ -198,16 +213,15 @@ extension MovieDetailViewController: FshareLinkManagerDelegate {
     
     func getDirectLinkSuccess(link: String) {
         print("Fucking UP Direct Link: \(link)")
-        guard let url = URL(string: link) else {return}
         linkToPlay = link
-        performSegue(withIdentifier: "gotoMoviePlayer", sender: nil)
-        
+        getIPLink(url: link)
     }
-//
+
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "gotoMoviePlayer" {
             let viewController = segue.destination as! MoviePlayerViewController
-            viewController.url = linkToPlay
+            viewController.mediaURL = linkToPlay
+            viewController.mediaTitle = titleToPlay
         }
     }
     
@@ -216,6 +230,35 @@ extension MovieDetailViewController: FshareLinkManagerDelegate {
         let action = UIAlertAction(title: "OK", style: .cancel)
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
+    }
+    
+    func getIPLink(url: String) {
+        let originalURL = url
+
+        print(originalURL.split(separator: "/"))
+
+        let hostadd = String(originalURL.split(separator: "/")[1])
+
+        let host = CFHostCreateWithName(nil, hostadd as CFString).takeRetainedValue()
+        CFHostStartInfoResolution(host, .addresses, nil)
+        var success: DarwinBoolean = false
+        if let addresses = CFHostGetAddressing(host, &success)?.takeUnretainedValue() as NSArray? {
+            print(addresses.count)
+            if case let theAddress as NSData = addresses.lastObject
+            {
+                var hostname = [CChar](repeating: 0, count: Int(NI_MAXHOST))
+                if getnameinfo(theAddress.bytes.assumingMemoryBound(to: sockaddr.self), socklen_t(theAddress.length),
+                               &hostname, socklen_t(hostname.count), nil, 0, NI_NUMERICHOST) == 0 {
+                    let numAddress = String(cString: hostname)
+                    print(numAddress)
+                    let finalURL = originalURL.replacingOccurrences(of: hostadd, with: numAddress)
+                    print(finalURL)
+                    linkToPlay = finalURL
+                }
+            }
+        }
+                performSegue(withIdentifier: "gotoMoviePlayer", sender: nil)
+
     }
     
 }

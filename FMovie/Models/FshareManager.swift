@@ -48,6 +48,7 @@ class FshareManager {
                     return
                 }
             case .failure(let value):
+                print("Error = \(value)")
                 self.delegate?.sessionIsDead(self)
                 return
             }
@@ -77,6 +78,7 @@ class FshareManager {
                     return
                 }
             case .failure(let value):
+                print(value)
                 self.delegate?.loginFailed(self)
                 return
             }
