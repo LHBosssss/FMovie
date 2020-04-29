@@ -26,7 +26,7 @@ class LoginViewController: UIViewController {
 
         // Style UI after load
         styleUI()
-        self.loginProcessing.stopAnimating()
+        self.loginProcessing.startAnimating()
         self.loginProcessing.layer.cornerRadius = 10
         self.loginProcessing.backgroundColor = UIColor.gray
         self.loginProcessing.alpha = 0.7
@@ -44,15 +44,20 @@ class LoginViewController: UIViewController {
     // MARK: - Load Account Data
     
     func loadAccountData() {
+        print("Loading account data")
         let realm = try! Realm()
         let accountData = realm.objects(FshareAccount.self)
+        print(accountData)
         let count = accountData.count
         if count > 0 {
+            print("Checking Session")
             if let session = accountData.first?.sessionID, let token = accountData.first?.token {
                 fshareManager = FshareManager(token: token, session: session)
                 fshareManager?.delegate = self
                 fshareManager!.checkSession()
             }
+        } else {
+            loginProcessing.stopAnimating()
         }
     }
     
@@ -146,6 +151,7 @@ extension LoginViewController: FshareManagerDelegate {
         performSegue(withIdentifier: "gotoMoviesListView", sender: nil)
     }
     func sessionIsDead(_ fshareManager: FshareManager) {
+        loginProcessing.stopAnimating()
         let alert = UIAlertController(title: "Lỗi đăng nhập", message: "Phiên đăng nhập đã hết hạn. Mời bạn đăng nhập lại.", preferredStyle: .alert)
         let okButton = UIAlertAction(title: "OK", style: .cancel)
         alert.addAction(okButton)

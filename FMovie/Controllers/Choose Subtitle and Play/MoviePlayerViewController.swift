@@ -17,16 +17,23 @@ class MoviePlayerViewController: UIViewController {
     @IBOutlet weak var movieProgress: UISlider!
     @IBOutlet weak var barBackground: UIView!
     @IBOutlet weak var progressView: UIStackView!
+    @IBOutlet weak var subtitleMenu: UIStackView!
     @IBOutlet weak var controlView: UIStackView!
     @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     @IBOutlet weak var seekingTime: UILabel!
+//    @IBOutlet weak var currentAction: UIImageView!
     @IBOutlet var tapped: UITapGestureRecognizer!
+    @IBOutlet weak var subtitleDelay: UILabel!
     
     var mediaPlayer = VLCMediaPlayer()
     var mediaURL = ""
     var mediaTitle = ""
     var maxTimeDidSet = false
     var isSeeking = false
+    var subURL : URL?
+    var isShowMovieBar = false
+    var subtitleManager = SubtitleManager()
+    var isShowSubtitleMenu = true
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,42 +59,78 @@ class MoviePlayerViewController: UIViewController {
     
     
     func setupMediaPlayer() {
+        loadingIndicator.stopAnimating()
+        hideMovieBar()
+        subtitleManager.delegate = self
         mediaPlayer.delegate = self
         mediaPlayer.drawable = movieView
+//        currentAction.isHidden = true
+//        currentAction.layer.cornerRadius = 10
         loadingIndicator.startAnimating()
         loadingIndicator.layer.cornerRadius = 10
         movieProgress.setThumbImage(UIImage(named: "thumb"), for: .normal)
         movieProgress.setThumbImage(UIImage(named: "thumb"), for: .highlighted)
         self.seekingTime.isHidden = true
-        
-        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { (timer) in
-            self.progressView.isHidden = true
-            self.controlView.isHidden = true
-            self.barBackground.isHidden = true
-            self.movieTitle.isHidden = true
-        }
         movieView.addGestureRecognizer(tapped)
         mediaPlayer.media = VLCMedia(url: URL(string: mediaURL)!)
+        
     }
+    
+    func showMovieBar() {
+        self.progressView.isHidden = false
+        self.controlView.isHidden = false
+        self.barBackground.isHidden = false
+        self.movieTitle.isHidden = false
+        self.isShowMovieBar = true
+    }
+    
+    
+    func hideMovieBar() {
+        self.progressView.isHidden = true
+        self.controlView.isHidden = true
+        self.barBackground.isHidden = true
+        self.movieTitle.isHidden = true
+        self.subtitleMenu.isHidden = true
+        self.isShowMovieBar = false
+//        self.currentAction.isHidden = true
+
+    }
+    
+    @IBAction func downloadSubtitle(_ sender: UIButton) {
+        print("Download Sub")
+        performSegue(withIdentifier: "gotoDownloadSubtitle", sender: nil)
+    }
+
+    @IBAction func selectSubtitle(_ sender: UIButton) {
+        print("Select Sub")
+        performSegue(withIdentifier: "gotoSelectSubtitle", sender: nil)
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "gotoDownloadSubtitle" {
+            let controller = segue.destination as! MovieListSubtitleViewController
+            controller.movieTitle = self.mediaTitle
+            controller.subtitleManager = self.subtitleManager
+        }
+    }
+    
     
     @IBAction func tapped(_ sender: UITapGestureRecognizer) {
         print("Tapped")
-        self.progressView.isHidden = !self.progressView.isHidden
-        self.controlView.isHidden = !self.controlView.isHidden
-        self.barBackground.isHidden = !self.barBackground.isHidden
-        self.movieTitle.isHidden = !self.movieTitle.isHidden
         
-        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { (timer) in
-            if !self.barBackground.isHidden {
-                self.progressView.isHidden = true
-                self.controlView.isHidden = true
-                self.barBackground.isHidden = true
-                self.movieTitle.isHidden = true
-            }
+        if isShowMovieBar {
+            hideMovieBar()
+        } else {
+            showMovieBar()
         }
     }
     
+    @IBAction func scaleFullScreen(_ sender: UIButton) {
+        mediaPlayer.scaleFactor = 0
+    }
+    
     @IBAction func scaleWidthPressed(_ sender: UIButton) {
+        
         let screenScale = UIScreen.main.scale
         let videoWidth = mediaPlayer.videoSize.width
         let screenWidth = UIScreen.main.bounds.width * screenScale
@@ -96,6 +139,7 @@ class MoviePlayerViewController: UIViewController {
         print(screenWidth)
         print(willScale)
         mediaPlayer.scaleFactor = Float(willScale)
+
     }
     @IBAction func scaleHeightPressed(_ sender: UIButton) {
         let screenScale = UIScreen.main.scale
@@ -113,9 +157,11 @@ class MoviePlayerViewController: UIViewController {
             mediaPlayer.pause()
             let remaining = mediaPlayer.remainingTime
             let time = mediaPlayer.time
+//            showImage(name: "pause.fill")
             print("Paused at \(time?.stringValue ?? "nil") with \(remaining?.stringValue ?? "nil") time remaining")
         }
         else {
+//            showImage(name: "play.fill")
             mediaPlayer.play()
             print("Playing")
         }
@@ -123,19 +169,39 @@ class MoviePlayerViewController: UIViewController {
     
     @IBAction func stopPressed(_ sender: UIButton) {
         mediaPlayer.stop()
+//        showImage(name: "stop")
+        self.dismiss(animated: true, completion: nil)
     }
     
     @IBAction func backwardPressed(_ sender: UIButton) {
         mediaPlayer.jumpBackward(10)
+//        showImage(name: "backward")
     }
     
     @IBAction func forwardPressed(_ sender: UIButton) {
         mediaPlayer.jumpForward(10)
+//        showImage(name: "forward")
     }
     
     @IBAction func subtitlePressed(_ sender: UIButton) {
-        print("Wait for completed")
+        mediaPlayer.pause()
+        isShowSubtitleMenu = !isShowSubtitleMenu
+        self.subtitleMenu.isHidden = isShowSubtitleMenu
+//        showImage(name: "pause")
     }
+    
+    @IBAction func subtitleDelayPressed(_ sender: UIStepper) {
+        subtitleDelay.text = String(sender.value)
+        print(sender.value*1000)
+        mediaPlayer.currentVideoSubTitleDelay = Int(sender.value)*1000
+        print(mediaPlayer.currentVideoSubTitleDelay)
+    }
+    
+//    func showImage(name: String) {
+//        currentAction.isHidden = false
+//        currentAction.image = UIImage(systemName: name)
+//    }
+    
     
     @IBAction func continousSeeking(_ sender: UISlider) {
         isSeeking = true
@@ -147,6 +213,7 @@ class MoviePlayerViewController: UIViewController {
     }
     
     @IBAction func didEndSeeking(_ sender: UISlider) {
+        showMovieBar()
         isSeeking = false
         let timeToSeek = Int32(sender.value)
         print(timeToSeek)
@@ -159,12 +226,7 @@ class MoviePlayerViewController: UIViewController {
         }
         Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { (timer) in
             self.seekingTime.isHidden = true
-        }
-        Timer.scheduledTimer(withTimeInterval: 3, repeats: false) { (timer) in
-            self.progressView.isHidden = true
-            self.controlView.isHidden = true
-            self.barBackground.isHidden = true
-            self.movieTitle.isHidden = true
+            self.hideMovieBar()
         }
     }
     
@@ -197,14 +259,23 @@ extension MoviePlayerViewController: VLCMediaPlayerDelegate {
         
         
         if !maxTimeDidSet {
+            if let sub = subURL {
+                self.mediaPlayer.addPlaybackSlave(sub, type: .subtitle, enforce: true)
+            }
+            print(VLCMediaTracksInformationSourceAspectRatio)
             loadingIndicator.stopAnimating()
             movieTitle.text = mediaTitle
-            print("1: \(mediaPlayer.titleDescriptions)")
-            print("2: \(mediaPlayer.media.description)")
-            print("3: \(mediaPlayer.media.tracksInformation)")
             self.movieProgress.maximumValue = Float(mediaPlayer.media.length.intValue / 1000)
             maxTimeDidSet = true
         }
     }
     
+}
+
+extension MoviePlayerViewController: SubtitleManagerDelegate {
+    func selectedSubtitle(url: String) {
+        print("delegate 1")
+        let subtitleURL: URL = URL(fileURLWithPath: url)
+        self.mediaPlayer.addPlaybackSlave(subtitleURL, type: .subtitle, enforce: true)
+    }
 }

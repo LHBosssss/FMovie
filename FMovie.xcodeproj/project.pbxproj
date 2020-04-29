@@ -26,9 +26,13 @@
 		EF98BBCA244C4AF10087CBBF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF98BBC8244C4AF10087CBBF /* Main.storyboard */; };
 		EF98BBCC244C4AF30087CBBF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EF98BBCB244C4AF30087CBBF /* Assets.xcassets */; };
 		EF98BBCF244C4AF30087CBBF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EF98BBCD244C4AF30087CBBF /* LaunchScreen.storyboard */; };
+		EFB3A8292457B91500E699BD /* MovieListSubtitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB3A8272457B91400E699BD /* MovieListSubtitleViewController.swift */; };
+		EFB3A82E2457BD7000E699BD /* ListSubtitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB3A82D2457BD7000E699BD /* ListSubtitleViewController.swift */; };
+		EFB3A8302457BD8100E699BD /* SelectSubtitleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFB3A82F2457BD8100E699BD /* SelectSubtitleViewController.swift */; };
 		EFBA0E1C2455723900C67786 /* ToImportMobileVLCKit.m in Sources */ = {isa = PBXBuildFile; fileRef = EFBA0E1B2455723900C67786 /* ToImportMobileVLCKit.m */; };
 		EFBA0E202455AEFA00C67786 /* MoviePlayer.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EFBA0E1F2455AEFA00C67786 /* MoviePlayer.storyboard */; };
 		EFBA0E222455B79B00C67786 /* MoviePlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFBA0E212455B79B00C67786 /* MoviePlayerViewController.swift */; };
+		EFD8D2232457E35700F0E621 /* SubtitleManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFD8D2222457E35700F0E621 /* SubtitleManager.swift */; };
 		EFE3B5F12453BDFE00E94BB9 /* FshareLinkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EFE3B5F02453BDFE00E94BB9 /* FshareLinkManager.swift */; };
 /* End PBXBuildFile section */
 
@@ -57,6 +61,9 @@
 		EF98BBCB244C4AF30087CBBF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EF98BBCE244C4AF30087CBBF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EF98BBD0244C4AF30087CBBF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EFB3A8272457B91400E699BD /* MovieListSubtitleViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieListSubtitleViewController.swift; sourceTree = "<group>"; };
+		EFB3A82D2457BD7000E699BD /* ListSubtitleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ListSubtitleViewController.swift; path = "/Users/hoduyluong/Hoc/iOS/FMovie/FMovie/Controllers/Choose Subtitle and Play/ListSubtitleViewController.swift"; sourceTree = "<absolute>"; };
+		EFB3A82F2457BD8100E699BD /* SelectSubtitleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SelectSubtitleViewController.swift; sourceTree = "<group>"; };
 		EFB698B62454529500741900 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		EFB698B72454529500741900 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		EFB698B82454529500741900 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
@@ -76,6 +83,7 @@
 		EFBA0E1B2455723900C67786 /* ToImportMobileVLCKit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ToImportMobileVLCKit.m; sourceTree = "<group>"; };
 		EFBA0E1F2455AEFA00C67786 /* MoviePlayer.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = MoviePlayer.storyboard; sourceTree = "<group>"; };
 		EFBA0E212455B79B00C67786 /* MoviePlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoviePlayerViewController.swift; sourceTree = "<group>"; };
+		EFD8D2222457E35700F0E621 /* SubtitleManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubtitleManager.swift; sourceTree = "<group>"; };
 		EFE3B5F02453BDFE00E94BB9 /* FshareLinkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FshareLinkManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -133,6 +141,7 @@
 				EF656597244F49CA000FBF9D /* MoviesManager.swift */,
 				EF61E8CD2451823D0013C95F /* MovieInformationManager.swift */,
 				EFE3B5F02453BDFE00E94BB9 /* FshareLinkManager.swift */,
+				EFD8D2222457E35700F0E621 /* SubtitleManager.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -176,10 +185,8 @@
 		EF98BBD6244C55C80087CBBF /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				EF98BBC6244C4AF10087CBBF /* LoginViewController.swift */,
-				EF3BC42F244DD192000B85C6 /* MoviesListViewController.swift */,
-				EF0EB0342451389C0018B784 /* MovieDetailViewController.swift */,
-				EFBA0E212455B79B00C67786 /* MoviePlayerViewController.swift */,
+				EFB3A8252457B8F400E699BD /* Choose Movie */,
+				EFB3A82A2457B91800E699BD /* Choose Subtitle and Play */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -195,6 +202,27 @@
 				EF1B9F5324533CF9006E2390 /* LinkViewCell.swift */,
 			);
 			path = Views;
+			sourceTree = "<group>";
+		};
+		EFB3A8252457B8F400E699BD /* Choose Movie */ = {
+			isa = PBXGroup;
+			children = (
+				EF98BBC6244C4AF10087CBBF /* LoginViewController.swift */,
+				EF3BC42F244DD192000B85C6 /* MoviesListViewController.swift */,
+				EF0EB0342451389C0018B784 /* MovieDetailViewController.swift */,
+			);
+			path = "Choose Movie";
+			sourceTree = "<group>";
+		};
+		EFB3A82A2457B91800E699BD /* Choose Subtitle and Play */ = {
+			isa = PBXGroup;
+			children = (
+				EFBA0E212455B79B00C67786 /* MoviePlayerViewController.swift */,
+				EFB3A8272457B91400E699BD /* MovieListSubtitleViewController.swift */,
+				EFB3A82D2457BD7000E699BD /* ListSubtitleViewController.swift */,
+				EFB3A82F2457BD8100E699BD /* SelectSubtitleViewController.swift */,
+			);
+			path = "Choose Subtitle and Play";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -315,6 +343,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EFB3A8302457BD8100E699BD /* SelectSubtitleViewController.swift in Sources */,
 				EF656592244EEB28000FBF9D /* SubMenuCollectionViewCell.swift in Sources */,
 				EFE3B5F12453BDFE00E94BB9 /* FshareLinkManager.swift in Sources */,
 				EF98BBC7244C4AF10087CBBF /* LoginViewController.swift in Sources */,
@@ -325,8 +354,11 @@
 				EFBA0E1C2455723900C67786 /* ToImportMobileVLCKit.m in Sources */,
 				EF98BBC3244C4AF10087CBBF /* AppDelegate.swift in Sources */,
 				EF1B9F5424533CF9006E2390 /* LinkViewCell.swift in Sources */,
+				EFD8D2232457E35700F0E621 /* SubtitleManager.swift in Sources */,
 				EF3BC42C244DC826000B85C6 /* FshareAccount.swift in Sources */,
+				EFB3A8292457B91500E699BD /* MovieListSubtitleViewController.swift in Sources */,
 				EF656598244F49CA000FBF9D /* MoviesManager.swift in Sources */,
+				EFB3A82E2457BD7000E699BD /* ListSubtitleViewController.swift in Sources */,
 				EF656590244EE432000FBF9D /* MainMenuCollectionViewCell.swift in Sources */,
 				EF98BBC5244C4AF10087CBBF /* SceneDelegate.swift in Sources */,
 				EF61E8CE2451823D0013C95F /* MovieInformationManager.swift in Sources */,
@@ -485,7 +517,7 @@
 					"$(PROJECT_DIR)/Pods/MobileVLCKit",
 				);
 				INFOPLIST_FILE = FMovie/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -514,7 +546,7 @@
 					"$(PROJECT_DIR)/Pods/MobileVLCKit",
 				);
 				INFOPLIST_FILE = FMovie/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.3;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

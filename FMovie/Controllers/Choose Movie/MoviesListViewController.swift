@@ -17,7 +17,7 @@ class MoviesListViewController: UIViewController {
     @IBOutlet weak var moviesCollection: UICollectionView!
     @IBOutlet weak var activityIndicator: UIActivityIndicatorView!
     @IBOutlet weak var backgroundImage: UIImageView!
-    @IBOutlet weak var searchBar: UITextField!
+    @IBOutlet weak var searchBar: UISearchBar!
     let categoryManager = CategoryManager()
     let moviesManager = MoviesManager()
     var mainMenu = CategoryManager().mainMenuArray
@@ -29,6 +29,9 @@ class MoviesListViewController: UIViewController {
     var loadedMore = false
     var isLastItem = false
     var genreToLoad = ""
+    var feedMovie = JSON()
+    var firstFetch = true
+    var wordToSearch = ""
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +45,7 @@ class MoviesListViewController: UIViewController {
         mainMenuCollection.delegate = self
         subMenuCollection.delegate = self
         moviesCollection.delegate = self
+        searchBar.delegate = self
         
         
         // Set Movies Manager Delegate
@@ -97,8 +101,6 @@ class MoviesListViewController: UIViewController {
         self.activityIndicator.isHidden = false
         self.activityIndicator.startAnimating()
         self.searchBar.isHidden = true
-        self.searchBar.clearsOnBeginEditing = true
-        self.searchBar.clearButtonMode = .whileEditing
         
         Timer.scheduledTimer(withTimeInterval: 1, repeats: false) { (timer) in
             self.mainMenuCollection.selectItem(at: IndexPath(item: 0, section: 0), animated: false, scrollPosition: .top)
@@ -170,104 +172,106 @@ class MoviesListViewController: UIViewController {
         hideMenuBar()
         let visibleCells = self.moviesCollection.visibleCells
         var nextCell = MoviesCollectionViewCell()
-        
-        if sender.direction == .left {
-            print("Swipe RIGHT -> LEFT")
-            //            print(visibleCells)
-            if var max = visibleCells.last?.frame.midX {
-                for cell in visibleCells {
-                    //                    print(cell.frame.midX)
-                    if cell.frame.midX >= max {
-                        max = cell.frame.midX
-                        nextCell = cell as! MoviesCollectionViewCell
+        if visibleCells.count > 0 {
+            if sender.direction == .left {
+                print("Swipe RIGHT -> LEFT")
+                //            print(visibleCells)
+                if var max = visibleCells.last?.frame.midX {
+                    for cell in visibleCells {
+                        //                    print(cell.frame.midX)
+                        if cell.frame.midX >= max {
+                            max = cell.frame.midX
+                            nextCell = cell as! MoviesCollectionViewCell
+                        }
                     }
                 }
-            }
-            
-            print(nextCell.movieTitleLabel.text ?? "")
-            if let indexPath = self.moviesCollection.indexPath(for: nextCell) {
-                gotoTop(cell: nextCell)
-                currentCellIndex = indexPath.item
-                self.moviesCollection.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-                for cell in visibleCells {
-                    if cell != nextCell {
-                        gotoDefault(cell: cell as! MoviesCollectionViewCell)
-                    }
-                }
-                print("Is loading more = \(isLoadingMore)")
-                print("Is last Item = \(isLastItem)")
-                print("Is loaded more = \(loadedMore)")
                 
-                if indexPath.item == self.movieItems.count - 1 && genreToLoad != "hot"{
-                    isLastItem = true
+                print(nextCell.movieTitleLabel.text ?? "")
+                if let indexPath = self.moviesCollection.indexPath(for: nextCell) {
+                    gotoTop(cell: nextCell)
+                    currentCellIndex = indexPath.item
+                    self.moviesCollection.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                    for cell in visibleCells {
+                        if cell != nextCell {
+                            gotoDefault(cell: cell as! MoviesCollectionViewCell)
+                        }
+                    }
+                    print("Is loading more = \(isLoadingMore)")
+                    print("Is last Item = \(isLastItem)")
+                    print("Is loaded more = \(loadedMore)")
                     
-                    if isLoadingMore && loadedMore && isLastItem {
-                        self.page += 1
-                        loadedMore = false
-                        print("page = \(page)")
-                        self.activityIndicator.isHidden = false
-                        self.activityIndicator.startAnimating()
-                        if genreToLoad == "feed" {
-                            DispatchQueue.global(qos: .background).async {
-                                self.moviesManager.getFeedMovies(search: "", page: self.page)
-                            }
-                        } else if genreToLoad == "search" {
-                            var searchWords = self.searchBar.text?.folding(options: .diacriticInsensitive, locale: .current)
-                            searchWords = searchWords?.replacingOccurrences(of: " ", with: "%20")
+                    if indexPath.item == self.movieItems.count - 1 && genreToLoad != "hot"{
+                        isLastItem = true
+                        
+                        if isLoadingMore && loadedMore && isLastItem {
+                            self.page += 1
+                            loadedMore = false
+                            print("page = \(page)")
+                            self.activityIndicator.isHidden = false
                             self.activityIndicator.startAnimating()
-                            DispatchQueue.global(qos: .background).async {
-                                self.moviesManager.getFeedMovies(search: searchWords, page: self.page)
+                            if genreToLoad == "feed" {
+                                wordToSearch = ""
+                                DispatchQueue.global(qos: .background).async {
+                                    self.moviesManager.getFeedMovies(search: "", page: self.page)
+                                }
+                            } else if genreToLoad == "search" {
+                                let searchWords = self.searchBar.text?.folding(options: .diacriticInsensitive, locale: .current)
+                                self.activityIndicator.startAnimating()
+                                DispatchQueue.global(qos: .background).async {
+                                    self.moviesManager.getFeedMovies(search: searchWords, page: self.page)
+                                }
+                            }
+                            else {
+                                DispatchQueue.global(qos: .userInitiated).async {
+                                    self.moviesManager.getGenreMovies(genre: self.genreToLoad, page: self.page)
+                                }
                             }
                         }
-                        else {
-                            DispatchQueue.global(qos: .userInitiated).async {
-                                self.moviesManager.getGenreMovies(genre: self.genreToLoad, page: self.page)
-                            }
+                        
+                        self.isLoadingMore = true
+                    }
+                }
+                
+            }
+            
+            
+            if sender.direction == .right {
+                //            let visibleCells = self.moviesCollection.visibleCells
+                print("Swipe LEFT -> RIGHT")
+                print(visibleCells)
+                //            var nextCell = MoviesCollectionViewCell()
+                if var min = visibleCells.first?.frame.midX {
+                    for cell in visibleCells {
+                        print(cell.frame.midX)
+                        if cell.frame.midX <= min {
+                            min = cell.frame.midX
+                            nextCell = cell as! MoviesCollectionViewCell
                         }
                     }
-                    
-                    self.isLoadingMore = true
+                }
+                
+                if let indexPath = self.moviesCollection.indexPath(for: nextCell) {
+                    gotoTop(cell: nextCell)
+                    currentCellIndex = indexPath.item
+                    self.moviesCollection.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
+                    for cell in visibleCells {
+                        if cell != nextCell {
+                            gotoDefault(cell: cell as! MoviesCollectionViewCell)
+                        }
+                    }
                 }
             }
             
-        }
-        
-        
-        if sender.direction == .right {
-            //            let visibleCells = self.moviesCollection.visibleCells
-            print("Swipe LEFT -> RIGHT")
-            print(visibleCells)
-            //            var nextCell = MoviesCollectionViewCell()
-            if var min = visibleCells.first?.frame.midX {
-                for cell in visibleCells {
-                    print(cell.frame.midX)
-                    if cell.frame.midX <= min {
-                        min = cell.frame.midX
-                        nextCell = cell as! MoviesCollectionViewCell
-                    }
-                }
+            if sender.direction == .up {
+                hideMenuBar()
+                performSegue(withIdentifier: "gotoMovieDetail", sender: nil)
             }
             
-            if let indexPath = self.moviesCollection.indexPath(for: nextCell) {
-                gotoTop(cell: nextCell)
-                currentCellIndex = indexPath.item
-                self.moviesCollection.scrollToItem(at: indexPath, at: .centeredHorizontally, animated: true)
-                for cell in visibleCells {
-                    if cell != nextCell {
-                        gotoDefault(cell: cell as! MoviesCollectionViewCell)
-                    }
-                }
+            if sender.direction == .down {
+                showMenuBar()
             }
         }
         
-        if sender.direction == .up {
-            hideMenuBar()
-            performSegue(withIdentifier: "gotoMovieDetail", sender: nil)
-        }
-        
-        if sender.direction == .down {
-            showMenuBar()
-        }
     }
     
     
@@ -278,18 +282,6 @@ class MoviesListViewController: UIViewController {
         }
         
     }
-    
-    // MARK: - Search
-    @IBAction func searchProcess(_ sender: UITextField) {
-        var searchWords = self.searchBar.text?.folding(options: .diacriticInsensitive, locale: .current)
-        searchWords = searchWords?.replacingOccurrences(of: " ", with: "%20")
-        self.activityIndicator.startAnimating()
-        DispatchQueue.global(qos: .background).async {
-            self.moviesManager.getFeedMovies(search: searchWords, page: 1)
-        }
-    }
-    
-    
     
 }
 // MARK: - Collection Data Source
@@ -531,6 +523,22 @@ extension MoviesListViewController: MoviesManagerDelegate {
     
     // MARK: - Get Movie Success
     func getMoviesSuccess(listMovies: JSON) {
+        
+        if firstFetch {
+            feedMovie = listMovies
+            firstFetch = false
+        } else {
+            if feedMovie == listMovies {
+                if wordToSearch.split(separator: " ").count >= 2 {
+                    let stringAfterRemove = wordToSearch.components(separatedBy: " ").dropLast().joined(separator: " ")
+                    wordToSearch = stringAfterRemove
+                    print(wordToSearch)
+                    moviesManager.getFeedMovies(search: wordToSearch, page: self.page)
+                }
+                
+            }
+        }
+        
         self.activityIndicator.isHidden = true
         self.activityIndicator.stopAnimating()
         let newMoviesArray = listMovies.arrayValue
@@ -589,10 +597,19 @@ extension MoviesListViewController: MoviesManagerDelegate {
     
 }
 
-extension MoviesListViewController: UIScrollViewDelegate {
+extension MoviesListViewController: UISearchBarDelegate {
     
-    func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("scrollViewDidEndDecelerating")
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+        let searchWords = self.searchBar.text?.folding(options: .diacriticInsensitive, locale: .current)
+        wordToSearch = searchWords!
+        self.activityIndicator.startAnimating()
+        DispatchQueue.global(qos: .background).async {
+            self.moviesManager.getFeedMovies(search: searchWords, page: 1)
+        }
     }
     
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
 }

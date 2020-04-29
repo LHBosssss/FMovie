@@ -8,9 +8,11 @@
 
 import UIKit
 import AVKit
+import Alamofire
 import SwiftyJSON
 import SDWebImage
 import RealmSwift
+import Zip
 
 class MovieDetailViewController: UIViewController {
     
@@ -33,13 +35,12 @@ class MovieDetailViewController: UIViewController {
     var token = ""
     var linkToPlay = ""
     var titleToPlay = ""
-    
+    var subURL : URL?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         movieInformationManager.delegate = self
         fshareLinkManager.delegate = self
-        
         listLink.removeExtraCellLines()
         self.loadingLink.layer.cornerRadius = 10
         self.loadingLink.backgroundColor = UIColor.systemGray4
@@ -89,14 +90,12 @@ class MovieDetailViewController: UIViewController {
     
     @IBAction func playButtonPressed(_ sender: UIButton) {
         print("Play!!!")
-        self.loadingLink.startAnimating()
         self.listLink.isHidden = !self.listLink.isHidden
         print("ID = \(self.movieItem["id"])")
         if !self.listLink.isHidden {
             DispatchQueue.global().async {
-                self.movieInformationManager.getMovieLink(id: self.movieItem["id"].stringValue)
+                self.movieInformationManager.getMovieLinkV2(id: self.movieItem["id"].stringValue)
             }
-            
         }
     }
     
@@ -162,6 +161,7 @@ extension MovieDetailViewController: MovieInformationManagerDelegate {
         self.loadingLink.stopAnimating()
         print("Description Information: \(description)")
         self.movieDesciption.text = description["descriptionInfo"].stringValue
+        self.titleToPlay = description["title"].stringValue
         self.movieTitle.text = description["title"].stringValue.replacingOccurrences(of: "&&", with: "\n")
     }
     
@@ -175,7 +175,6 @@ extension MovieDetailViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.listLink.deselectRow(at: indexPath, animated: true)
         self.linkToPlay = ""
-        self.titleToPlay = listTitleAndLink[indexPath.row]["title"].stringValue
         self.loadingLink.startAnimating()
         let link = listTitleAndLink[indexPath.row]["link"].stringValue
         print("Selected \(link)")
@@ -213,15 +212,71 @@ extension MovieDetailViewController: FshareLinkManagerDelegate {
     
     func getDirectLinkSuccess(link: String) {
         print("Fucking UP Direct Link: \(link)")
-        linkToPlay = link
-        getIPLink(url: link)
+        let checkLink = String(link.split(separator: ".").last ?? "")
+        if (checkLink == "zip") ||  (checkLink == "srt")  || (checkLink == "ass") {
+            downloadSubtitle(url: link)
+            loadingLink.stopAnimating()
+            playButtonPressed(UIButton(type: .close))
+        } else if (checkLink == "iso") {
+            loadingLink.stopAnimating()
+            return
+        } else {
+            linkToPlay = link
+            if link != "" {
+                getIPLink(url: link)
+            }
+        }
     }
+    
+    func downloadSubtitle(url: String) {
+        let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
+        let documentsDirectory = paths[0]
+        let docURL = URL(string: documentsDirectory)!
+        let dataPath = docURL.appendingPathComponent("SubtitleFolder")
+        if !FileManager.default.fileExists(atPath: dataPath.absoluteString) {
+            do {
+                try FileManager.default.createDirectory(atPath: dataPath.absoluteString, withIntermediateDirectories: true, attributes: nil)
+            } catch {
+                print(error.localizedDescription);
+            }
+        }
 
+        let destination = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory, in: .userDomainMask, options: .removePreviousFile)
+        let fm = FileManager.default
+        let documentPath = documentsDirectory + "/SubtitleFolder"
+        do {
+            try fm.removeItem(atPath: documentPath)
+        } catch {
+            print("Remove Item Error")
+        }
+        AF.download(url, to: destination ).responseData { response in
+            let filename = response
+            print(filename)
+            let fileURL = response.fileURL!
+            print(fileURL)
+            self.loadingLink.stopAnimating()
+
+            do {
+                try Zip.unzipFile(fileURL, destination: dataPath, overwrite: true, password: nil, progress: { (progress) -> () in
+                    print(progress)
+                }) // Unzip
+                try fm.removeItem(at: fileURL)
+            }
+            catch {
+                self.subURL = fileURL
+                print("Something went wrong")
+            }
+        }
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "gotoMoviePlayer" {
             let viewController = segue.destination as! MoviePlayerViewController
             viewController.mediaURL = linkToPlay
-            viewController.mediaTitle = titleToPlay
+            print(self.movieItem["title"].stringValue)
+            print(self.titleToPlay)
+            viewController.mediaTitle = self.titleToPlay
+            viewController.subURL = self.subURL
         }
     }
     
@@ -234,11 +289,11 @@ extension MovieDetailViewController: FshareLinkManagerDelegate {
     
     func getIPLink(url: String) {
         let originalURL = url
-
+        
         print(originalURL.split(separator: "/"))
-
+        
         let hostadd = String(originalURL.split(separator: "/")[1])
-
+        
         let host = CFHostCreateWithName(nil, hostadd as CFString).takeRetainedValue()
         CFHostStartInfoResolution(host, .addresses, nil)
         var success: DarwinBoolean = false
@@ -257,8 +312,8 @@ extension MovieDetailViewController: FshareLinkManagerDelegate {
                 }
             }
         }
-                performSegue(withIdentifier: "gotoMoviePlayer", sender: nil)
-
+        performSegue(withIdentifier: "gotoMoviePlayer", sender: nil)
+        
     }
     
 }

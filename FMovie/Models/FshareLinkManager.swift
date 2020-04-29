@@ -20,7 +20,7 @@ class FshareLinkManager {
     
     var delegate: FshareLinkManagerDelegate?
     
-    func getDirectLink(session: String, token: String, link: String) {
+    func getDirectLink(session: String, token: String, link: String) {        
         let requestURL = URL(string: "https://api.fshare.vn/api/session/download")
         let header: HTTPHeaders = [
             "Referer" : "www.fshare.vn",

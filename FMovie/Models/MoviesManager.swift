@@ -24,9 +24,12 @@ class MoviesManager {
     func getFeedMovies(search: String? = "", page: Int) {
         print("Get feed movies \(Thread.current)")
         var listMovies = JSON()
-        let requestURL = "https://www.thuvienaz.net/?feed=fsharejson&search=\(search ?? "")&page=\(search == "" ? 14*(page-1) : page)"
+        let searchValue = search?.replacingOccurrences(of: " ", with: "%") ?? ""
+        let page = search == "" ? 14*(page-1) : page == 1 ? 0 : page
+        let requestURL = "https://vaphim.com/?feed=fsharejson&page=\(page)&search=\(searchValue)"
         print(requestURL)
-        AF.request(requestURL).responseJSON { (response) in
+        let safeURL = requestURL.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed)
+        AF.request(safeURL ?? "", method: .get, encoding: URLEncoding.default).responseJSON { (response) in
             switch response.result {
             case .success(let value):
                 let json = JSON(value)

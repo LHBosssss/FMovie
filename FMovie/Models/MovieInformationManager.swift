@@ -22,7 +22,7 @@ protocol MovieInformationManagerDelegate {
     
     func getMovieLinkSuccess(links: JSON)
     func getMovieLinkFailed()
-
+    
 }
 
 class MovieInformationManager {
@@ -32,7 +32,7 @@ class MovieInformationManager {
     
     func getMovieExtraInformation(url: String) {
         print("getMovieExtraInformation \(Thread.current)")
-
+        
         var extraInfo = JSON()
         var actors = ""
         guard let url = URL(string: url) else { return }
@@ -80,7 +80,7 @@ class MovieInformationManager {
     
     func getMovieDescriptionInformation(id: String) {
         print("getMovieDescriptionInformation \(Thread.current)")
-
+        
         guard let url = URL(string: "https://vaphim.com/?feed=fsharejson&id=\(id)") else { return }
         var urlRequest = URLRequest(url: url)
         urlRequest.timeoutInterval = TimeInterval(exactly: 10)!
@@ -107,25 +107,63 @@ class MovieInformationManager {
     }
     
     func getMovieLink(id: String) {
-         print("getMovieLink \(Thread.current)")
-
-         guard let url = URL(string: "https://vaphim.com/?feed=fsharejson&id=\(id)") else { return }
-         var urlRequest = URLRequest(url: url)
-         urlRequest.timeoutInterval = TimeInterval(exactly: 10)!
-         AF.request(urlRequest).responseJSON { (response) in
-             switch response.result {
-                 
-             case .success(let value):
-                 let json = JSON(value)
-                 let links = json["link"]
-
-                 self.delegate?.getMovieLinkSuccess(links: links)
-                 
-             case .failure(let error):
-                 print("Get Movie Description Information Error: \(error)")
-                 self.delegate?.getMovieLinkFailed()
-             }
-         }
-     }
+        print("getMovieLink \(Thread.current)")
+        
+        guard let url = URL(string: "https://vaphim.com/?feed=fsharejson&id=\(id)") else { return }
+        var urlRequest = URLRequest(url: url)
+        urlRequest.timeoutInterval = TimeInterval(exactly: 10)!
+        AF.request(urlRequest).responseJSON { (response) in
+            switch response.result {
+                
+            case .success(let value):
+                let json = JSON(value)
+                let links = json["link"]
+                self.delegate?.getMovieLinkSuccess(links: links)
+                
+            case .failure(let error):
+                print("Get Movie Description Information Error: \(error)")
+                self.delegate?.getMovieLinkFailed()
+            }
+        }
+    }
     
+    
+    func getMovieLinkV2(id: String) {
+        print("getMovieLinkV2 \(Thread.current)")
+        
+        guard let url = URL(string: "https://www.thuvienaz.net/convert-video?id=\(id)") else { return }
+        var urlRequest = URLRequest(url: url)
+        urlRequest.timeoutInterval = TimeInterval(exactly: 10)!
+        AF.request(urlRequest).responseString { (response) in
+            do {
+                var listLinktoReturn = [[String : String]]()
+                let html = try response.result.get()
+                let doc: Document = try SwiftSoup.parse(html)
+                // Get Year, Country, Runtime
+                let tableClass = try doc.getElementsByClass("post_table").first()
+                let tbody = try tableClass?.select("tbody").first()
+                let listLink = try tbody?.getElementsByTag("tr")
+                if let list = listLink {
+                    for link in list {
+                        let title = try link.text()
+                        let link = try link.select("input").attr("value")
+                        let itemLink = [
+                            "title" : title,
+                            "link" : link
+                        ]
+                        listLinktoReturn.append(itemLink)
+                        print(itemLink)
+                    }
+                    let json = JSON(listLinktoReturn)
+                    self.delegate?.getMovieLinkSuccess(links: json)
+                }
+            } catch Exception.Error(let type, let message) {
+                print("Get Movie Extra Information Error: \(type) \(message)")
+                self.delegate?.getMovieExtraInformationFailed()
+            } catch {
+                print("Get Movie Extra Information Error")
+                self.delegate?.getMovieExtraInformationFailed()
+            }
+        }
+    }
 }
